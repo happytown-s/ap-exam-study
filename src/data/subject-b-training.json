@@ -1,0 +1,1476 @@
+[
+  {
+    "topic": "Algorithm Design",
+    "questions": [
+      {
+        "question": "Given an array A[1..n], what is the time complexity of binary search?",
+        "options": [
+          "O(log n)",
+          "O(n)",
+          "O(n log n)",
+          "O(1)"
+        ],
+        "correct": 0,
+        "explanation": "Binary search halves the search space each iteration: n, n/2, n/4, ... 1. After k iterations: n/2^k = 1, so k = log2(n). Time complexity: O(log n).",
+        "code": "PROCEDURE BinarySearch(A, n, key)\n  low ← 1; high ← n\n  WHILE low ≤ high DO\n    mid ← (low + high) DIV 2\n    IF A[mid] = key THEN\n      RETURN mid\n    ELSE IF A[mid] < key THEN\n      low ← mid + 1\n    ELSE\n      high ← mid - 1\n    END IF\n  END WHILE\n  RETURN 0\nEND PROCEDURE"
+      },
+      {
+        "question": "In a greedy algorithm for the coin change problem (coins: 25, 10, 5, 1), how many coins for 67 cents?",
+        "options": [
+          "6 (2x25 + 1x10 + 1x5 + 2x1)",
+          "7",
+          "5",
+          "8"
+        ],
+        "correct": 0,
+        "explanation": "Greedy: Take largest coin first. 67/25=2 (50), remainder 17. 17/10=1 (10), remainder 7. 7/5=1 (5), remainder 2. 2/1=2. Total: 2+1+1+2=6 coins. Greedy works for US coin denominations.",
+        "code": "PROCEDURE GreedyCoinChange(amount, coins)\n  count ← 0\n  FOR i ← 1 TO LENGTH(coins) DO\n    WHILE amount ≥ coins[i] DO\n      amount ← amount - coins[i]\n      count ← count + 1\n    END WHILE\n  END FOR\n  RETURN count\nEND PROCEDURE\n-- coins = {25, 10, 5, 1}, amount = 67\n-- Result: 6 coins"
+      },
+      {
+        "question": "What is the time complexity of finding the longest common subsequence (LCS) using dynamic programming?",
+        "options": [
+          "O(m*n)",
+          "O(m+n)",
+          "O(2^(m+n))",
+          "O(m*n*log(m*n))"
+        ],
+        "correct": 0,
+        "explanation": "LCS DP fills a table of size (m+1)*(n+1) where m and n are string lengths. Each cell takes O(1) to compute. Total: O(m*n) time and space.",
+        "code": "PROCEDURE LCS(X, m, Y, n)\n  FOR i ← 0 TO m DO\n    C[i][0] ← 0\n  END FOR\n  FOR j ← 0 TO n DO\n    C[0][j] ← 0\n  END FOR\n  FOR i ← 1 TO m DO\n    FOR j ← 1 TO n DO\n      IF X[i] = Y[j] THEN\n        C[i][j] ← C[i-1][j-1] + 1\n      ELSE\n        C[i][j] ← MAX(C[i-1][j], C[i][j-1])\n      END IF\n    END FOR\n  END FOR\n  RETURN C[m][n]\nEND PROCEDURE"
+      },
+      {
+        "question": "Merge sort divides the array into halves. What is the recurrence relation?",
+        "options": [
+          "T(n) = 2T(n/2) + O(n)",
+          "T(n) = T(n/2) + O(n)",
+          "T(n) = 2T(n/2) + O(1)",
+          "T(n) = T(n-1) + O(n)"
+        ],
+        "correct": 0,
+        "explanation": "Merge sort: divide into 2 halves (2T(n/2)), then merge in O(n). By Master Theorem: T(n) = 2T(n/2) + O(n) => T(n) = O(n log n).",
+        "code": "PROCEDURE MergeSort(A, left, right)\n  IF left < right THEN\n    mid ← (left + right) DIV 2\n    MergeSort(A, left, mid)\n    MergeSort(A, mid+1, right)\n    Merge(A, left, mid, right)\n  END IF\nEND PROCEDURE\n\nPROCEDURE Merge(A, left, mid, right)\n  -- Create temp arrays L and R\n  -- Merge them back in sorted order\n  -- O(n) time, O(n) space\nEND PROCEDURE"
+      },
+      {
+        "question": "Which algorithm paradigm is used for Dijkstra's shortest path?",
+        "options": [
+          "Greedy",
+          "Dynamic Programming",
+          "Divide and Conquer",
+          "Backtracking"
+        ],
+        "correct": 0,
+        "explanation": "Dijkstra's algorithm greedily selects the unvisited vertex with minimum distance at each step. It assumes non-negative edge weights and finds single-source shortest paths in O((V+E)log V) with a min-heap.",
+        "code": "PROCEDURE Dijkstra(G, start)\n  FOR each vertex v IN G DO\n    dist[v] ← INFINITY; prev[v] ← NULL\n  END FOR\n  dist[start] ← 0\n  Q ← all vertices in G\n  WHILE Q is not empty DO\n    u ← vertex in Q with min dist[u]\n    REMOVE u FROM Q\n    FOR each neighbor v of u DO\n      alt ← dist[u] + weight(u, v)\n      IF alt < dist[v] THEN\n        dist[v] ← alt\n        prev[v] ← u\n      END IF\n    END FOR\n  END WHILE\nEND PROCEDURE"
+      },
+      {
+        "question": "The 0/1 knapsack problem: items (weight,value) = [(2,3),(3,4),(4,5)], capacity=5. Maximum value?",
+        "options": [
+          "7 (items 1 and 2)",
+          "8",
+          "5",
+          "9"
+        ],
+        "correct": 0,
+        "explanation": "Options for capacity 5: (2+3)=5, value 3+4=7. (2+4)=6>5 invalid. (3+4)=7>5 invalid. Single items: 3,4,5. Best: items 1 and 2, value=7.",
+        "code": "PROCEDURE Knapsack01(W, wt, val, n)\n  FOR w ← 0 TO W DO\n    K[0][w] ← 0\n  END FOR\n  FOR i ← 1 TO n DO\n    K[i][0] ← 0\n    FOR w ← 1 TO W DO\n      IF wt[i] ≤ w THEN\n        K[i][w] ← MAX(val[i]+K[i-1][w-wt[i]], K[i-1][w])\n      ELSE\n        K[i][w] ← K[i-1][w]\n      END IF\n    END FOR\n  END FOR\n  RETURN K[n][W]\nEND PROCEDURE"
+      },
+      {
+        "question": "What is the worst-case time complexity of quicksort?",
+        "options": [
+          "O(n^2)",
+          "O(n log n)",
+          "O(n)",
+          "O(n^3)"
+        ],
+        "correct": 0,
+        "explanation": "Quicksort worst case occurs when the pivot is always the smallest or largest element (already sorted input with first/last pivot). This gives T(n) = T(n-1) + O(n) = O(n^2). Average case is O(n log n).",
+        "code": "PROCEDURE QuickSort(A, low, high)\n  IF low < high THEN\n    pivot ← Partition(A, low, high)\n    QuickSort(A, low, pivot - 1)\n    QuickSort(A, pivot + 1, high)\n  END IF\nEND PROCEDURE\n\nPROCEDURE Partition(A, low, high)\n  pivot ← A[high]\n  i ← low - 1\n  FOR j ← low TO high-1 DO\n    IF A[j] ≤ pivot THEN\n      i ← i + 1\n      SWAP A[i], A[j]\n    END IF\n  END FOR\n  SWAP A[i+1], A[high]\n  RETURN i + 1\nEND PROCEDURE"
+      },
+      {
+        "question": "Divide and conquer: maximum subarray sum of [-2, 1, -3, 4, -1, 2, 1, -5, 4]?",
+        "options": [
+          "6 (subarray [4,-1,2,1])",
+          "7",
+          "4",
+          "10"
+        ],
+        "correct": 0,
+        "explanation": "Kadane's algorithm (modified divide-conquer): max ending at each position. Best subarray is [4,-1,2,1] with sum 6.",
+        "code": "PROCEDURE Kadane(A, n)\n  maxSoFar ← A[1]\n  maxEnding ← A[1]\n  FOR i ← 2 TO n DO\n    maxEnding ← MAX(A[i], maxEnding + A[i])\n    maxSoFar ← MAX(maxSoFar, maxEnding)\n  END FOR\n  RETURN maxSoFar\nEND PROCEDURE\n-- A = [-2,1,-3,4,-1,2,1,-5,4]\n-- i=1: maxEnd=-2, maxSF=-2\n-- i=2: maxEnd=1, maxSF=1\n-- i=3: maxEnd=-2, maxSF=1\n-- i=4: maxEnd=4, maxSF=4\n-- i=5: maxEnd=3, maxSF=4\n-- i=6: maxEnd=5, maxSF=5\n-- i=7: maxEnd=6, maxSF=6\n-- i=8: maxEnd=1, maxSF=6\n-- i=9: maxEnd=5, maxSF=6\n-- Result: 6"
+      },
+      {
+        "question": "In dynamic programming, what is optimal substructure?",
+        "options": [
+          "An optimal solution contains optimal solutions to its subproblems",
+          "Subproblems are independent",
+          "All solutions are equally good",
+          "The problem has a greedy solution"
+        ],
+        "correct": 0,
+        "explanation": "Optimal substructure means the optimal solution to a problem can be constructed from optimal solutions of its subproblems. This is one of two key properties for DP (the other being overlapping subproblems).",
+        "code": "-- Optimal substructure example:\n-- Shortest path: if A->B->C is shortest from A to C,\n-- then A->B is shortest from A to B\n-- and B->C is shortest from B to C\n\nPROCEDURE ShortestPath(G, src, dst)\n  -- The shortest path from src to dst goes through\n  -- some intermediate node v, and the subpaths\n  -- src->v and v->dst are also shortest paths\n  -- This is optimal substructure\nEND PROCEDURE"
+      },
+      {
+        "question": "Fibonacci with memoization: F(7) where F(1)=1, F(2)=1?",
+        "options": [
+          "13",
+          "8",
+          "21",
+          "11"
+        ],
+        "correct": 0,
+        "explanation": "F(1)=1, F(2)=1, F(3)=2, F(4)=3, F(5)=5, F(6)=8, F(7)=13. With memoization, each value is computed once: O(n) time instead of O(2^n).",
+        "code": "PROCEDURE Fib(n, memo)\n  IF memo[n] ≠ UNDEFINED THEN\n    RETURN memo[n]\n  END IF\n  IF n ≤ 2 THEN\n    RETURN 1\n  END IF\n  memo[n] ← Fib(n-1, memo) + Fib(n-2, memo)\n  RETURN memo[n]\nEND PROCEDURE\n-- memo[1]=1, memo[2]=1\n-- memo[3]=2, memo[4]=3, memo[5]=5\n-- memo[6]=8, memo[7]=13"
+      },
+      {
+        "question": "What is the time complexity of matrix chain multiplication DP with n matrices?",
+        "options": [
+          "O(n^3)",
+          "O(n^2)",
+          "O(2^n)",
+          "O(n!)"
+        ],
+        "correct": 0,
+        "explanation": "DP fills a table of n*n entries. Each entry M[i][j] examines j-i possible split points. Total: O(n^3) time and O(n^2) space.",
+        "code": "PROCEDURE MatrixChain(p, n)\n  FOR i ← 1 TO n DO\n    m[i][i] ← 0\n  END FOR\n  FOR L ← 2 TO n DO\n    FOR i ← 1 TO n-L+1 DO\n      j ← i + L - 1\n      m[i][j] ← INFINITY\n      FOR k ← i TO j-1 DO\n        q ← m[i][k] + m[k+1][j] + p[i-1]*p[k]*p[j]\n        IF q < m[i][j] THEN\n          m[i][j] ← q\n        END IF\n      END FOR\n    END FOR\n  END FOR\n  RETURN m[1][n]\nEND PROCEDURE"
+      },
+      {
+        "question": "In greedy algorithm, when does the greedy choice NOT produce an optimal solution?",
+        "options": [
+          "0/1 Knapsack with specific weights/values",
+          "Minimum spanning tree",
+          "Huffman coding",
+          "Activity selection"
+        ],
+        "correct": 0,
+        "explanation": "Greedy fails for 0/1 knapsack (taking the highest value/weight ratio item may not leave room for the optimal combination). Fractional knapsack can be solved greedily. MST (Kruskal/Prim), Huffman coding, and activity selection are classic greedy-success problems.",
+        "code": "-- Greedy FAILS for 0/1 Knapsack:\n-- Items: (weight,value) = [(10,60),(20,100),(30,120)]\n-- Capacity: 50\n-- Greedy by value/weight: 60/10=6, 100/20=5, 120/30=4\n-- Greedy picks items 1+2: weight=30, value=160\n-- Optimal: items 2+3: weight=50, value=220\n-- Fractional knapsack greedy works because\n-- we can take fractions of items"
+      },
+      {
+        "question": "Counting inversions in an array [2, 4, 1, 3, 5]?",
+        "options": [
+          "3 inversions",
+          "2 inversions",
+          "4 inversions",
+          "1 inversion"
+        ],
+        "correct": 0,
+        "explanation": "Inversions: (2,1), (4,1), (4,3). Total: 3 inversions. Can be counted in O(n log n) using modified merge sort.",
+        "code": "PROCEDURE CountInversions(A, temp, left, right)\n  inv ← 0\n  IF left < right THEN\n    mid ← (left + right) DIV 2\n    inv ← inv + CountInversions(A, temp, left, mid)\n    inv ← inv + CountInversions(A, temp, mid+1, right)\n    inv ← inv + MergeAndCount(A, temp, left, mid, right)\n  END IF\n  RETURN inv\nEND PROCEDURE\n-- [2,4,1,3,5]: inversions = 3"
+      },
+      {
+        "question": "What is the Master Theorem case for T(n) = 3T(n/2) + O(n)?",
+        "options": [
+          "Case 1: O(n^log2(3)) ≈ O(n^1.585)",
+          "Case 2: O(n log n)",
+          "Case 3: O(n)",
+          "Does not apply"
+        ],
+        "correct": 0,
+        "explanation": "T(n) = aT(n/b) + f(n): a=3, b=2, f(n)=O(n). Compare n^(log_b(a)) = n^1.585 with f(n) = n. Since f(n) = O(n^(log_b(a)-epsilon), this is Case 1. T(n) = O(n^1.585).",
+        "code": "-- Master Theorem:\n-- T(n) = aT(n/b) + O(n^d)\n-- Case 1: d < log_b(a) => T(n) = O(n^log_b(a))\n-- Case 2: d = log_b(a) => T(n) = O(n^d * log n)\n-- Case 3: d > log_b(a) => T(n) = O(n^d)\n\n-- T(n) = 3T(n/2) + O(n)\n-- a=3, b=2, d=1\n-- log_2(3) = 1.585 > 1\n-- Case 1: T(n) = O(n^1.585)"
+      },
+      {
+        "question": "What is the output of the following IPA pseudocode for array [3,1,4,1,5]?",
+        "options": [
+          "[1,1,3,4,5] sorted ascending",
+          "[5,4,3,1,1] sorted descending",
+          "[1,1,4,3,5] partially sorted",
+          "[3,1,1,4,5]"
+        ],
+        "correct": 0,
+        "explanation": "Bubble sort repeatedly swaps adjacent elements if out of order. After multiple passes, the array becomes [1,1,3,4,5].",
+        "code": "PROCEDURE BubbleSort(A, n)\n  FOR i ← 1 TO n-1 DO\n    FOR j ← 1 TO n-i DO\n      IF A[j] > A[j+1] THEN\n        SWAP A[j], A[j+1]\n      END IF\n    END FOR\n  END FOR\nEND PROCEDURE\n\n-- A = [3,1,4,1,5], n=5\n-- Pass 1: [1,3,1,4,5], [1,1,3,4,5], [1,1,3,4,5], [1,1,3,4,5]\n-- Pass 2: [1,1,3,4,5] (already sorted)\n-- Result: [1,1,3,4,5]"
+      }
+    ]
+  },
+  {
+    "topic": "Data Structures",
+    "questions": [
+      {
+        "question": "In a min-heap, the minimum element is always at which position (1-based array)?",
+        "options": [
+          "Index 1 (root)",
+          "Index n (last)",
+          "Index n/2",
+          "Index n/2 + 1"
+        ],
+        "correct": 0,
+        "explanation": "In a min-heap stored as an array, the root (minimum element) is always at index 1. Parent of node i is at i/2, left child at 2i, right child at 2i+1.",
+        "code": "-- Min-Heap (1-based array)\n-- Parent(i) = i DIV 2\n-- LeftChild(i) = 2 * i\n-- RightChild(i) = 2 * i + 1\n\n-- Example: [1, 3, 2, 7, 5, 4]\n--         1\n--        / \\\n--       3   2\n--      / \\ / \\\n--     7  5 4\n-- Min element: A[1] = 1"
+      },
+      {
+        "question": "Post-order traversal of a binary tree: A(B(D,E),C(F,)). What is the output?",
+        "options": [
+          "D, E, B, F, C, A",
+          "A, B, D, E, C, F",
+          "D, B, E, A, F, C",
+          "D, E, F, B, C, A"
+        ],
+        "correct": 0,
+        "explanation": "Post-order: left, right, root. Visit D, then E, then B, then F, then C, then A. Result: D, E, B, F, C, A.",
+        "code": "PROCEDURE PostOrder(node)\n  IF node ≠ NULL THEN\n    PostOrder(node.left)\n    PostOrder(node.right)\n    PRINT node.value\n  END IF\nEND PROCEDURE\n\n-- Tree:     A\n--          / \\\n--         B   C\n--        / \\ /\n--       D  E F\n\n-- PostOrder: D, E, B, F, C, A"
+      },
+      {
+        "question": "What is the height of a balanced BST with 7 nodes?",
+        "options": [
+          "2 (or 3 depending on definition)",
+          "3",
+          "7",
+          "1"
+        ],
+        "correct": 0,
+        "explanation": "A balanced BST with 7 nodes has height 2 (edges from root to deepest leaf) or 3 (nodes on the path). Balanced means height = floor(log2(n)).",
+        "code": "-- Balanced BST with 7 nodes:\n--         4\n--        / \\\n--       2   6\n--      / \\ / \\\n--     1  3 5  7\n\n-- Height (edges): 2\n-- Height (nodes): 3\n-- log2(7) ≈ 2.81, floor = 2"
+      },
+      {
+        "question": "Hash table with 10 slots, hash function h(k) = k mod 10. Where does key 25 go?",
+        "options": [
+          "Slot 5",
+          "Slot 2",
+          "Slot 0",
+          "Slot 25"
+        ],
+        "correct": 0,
+        "explanation": "h(25) = 25 mod 10 = 5. The key 25 is placed in slot 5 of the hash table.",
+        "code": "PROCEDURE HashInsert(table, key)\n  index ← key MOD 10\n  WHILE table[index] ≠ EMPTY DO\n    index ← (index + 1) MOD 10  -- linear probing\n  END WHILE\n  table[index] ← key\nEND PROCEDURE\n\n-- h(25) = 25 MOD 10 = 5\n-- Slot 5"
+      },
+      {
+        "question": "In-order traversal of a BST always produces what?",
+        "options": [
+          "Sorted (ascending) order of elements",
+          "Reverse sorted order",
+          "Level order",
+          "Random order"
+        ],
+        "correct": 0,
+        "explanation": "BST property: left subtree < node < right subtree. In-order traversal (left, root, right) visits nodes in ascending order.",
+        "code": "PROCEDURE InOrder(node)\n  IF node ≠ NULL THEN\n    InOrder(node.left)\n    PRINT node.value\n    InOrder(node.right)\n  END IF\nEND PROCEDURE\n\n-- BST:     4\n--        / \\\n--       2   6\n--      / \\ / \\\n--     1  3 5  7\n\n-- InOrder: 1, 2, 3, 4, 5, 6, 7 (sorted!)"
+      },
+      {
+        "question": "BFS traversal starting from node A in graph: A-B, A-C, B-D, C-D. What is the visit order?",
+        "options": [
+          "A, B, C, D",
+          "A, B, D, C",
+          "A, C, B, D",
+          "A, C, D, B"
+        ],
+        "correct": 0,
+        "explanation": "BFS uses a queue. Start A, enqueue B,C. Dequeue B, enqueue D. Dequeue C (D already visited). Dequeue D. Order: A, B, C, D.",
+        "code": "PROCEDURE BFS(G, start)\n  queue ← EMPTY\n  visited[start] ← TRUE\n  ENQUEUE(queue, start)\n  WHILE queue is not empty DO\n    v ← DEQUEUE(queue)\n    PRINT v\n    FOR each neighbor w of v DO\n      IF NOT visited[w] THEN\n        visited[w] ← TRUE\n        ENQUEUE(queue, w)\n      END IF\n    END FOR\n  END WHILE\nEND PROCEDURE"
+      },
+      {
+        "question": "Stack operations: push(5), push(3), pop(), push(7), push(1), pop(), pop(). What is popped in order?",
+        "options": [
+          "3, 1, 7",
+          "5, 3, 1",
+          "3, 7, 5",
+          "5, 1, 7"
+        ],
+        "correct": 0,
+        "explanation": "push(5): [5], push(3): [5,3], pop(): returns 3, [5], push(7): [5,7], push(1): [5,7,1], pop(): returns 1, [5,7], pop(): returns 7, [5]. Popped: 3, 1, 7.",
+        "code": "-- Stack (LIFO: Last In First Out)\n-- push(5): [5]\n-- push(3): [5, 3]\n-- pop()  : returns 3, [5]\n-- push(7): [5, 7]\n-- push(1): [5, 7, 1]\n-- pop()  : returns 1, [5, 7]\n-- pop()  : returns 7, [5]\n\n-- Popped order: 3, 1, 7"
+      },
+      {
+        "question": "In a B-tree of order 5 (min keys=2, max keys=4), what happens when inserting into a full leaf?",
+        "options": [
+          "The leaf splits into two, and the median key moves up",
+          "The leaf overflows and wraps around",
+          "An error occurs",
+          "The tree becomes invalid"
+        ],
+        "correct": 0,
+        "explanation": "When a node exceeds the maximum number of keys, it splits: the median key moves up to the parent, and remaining keys are divided into two new nodes. This maintains B-tree properties.",
+        "code": "-- B-tree of order m=5:\n-- Min keys: ceil(m/2)-1 = 2\n-- Max keys: m-1 = 4\n-- Min children: ceil(m/2) = 3\n-- Max children: m = 5\n\n-- Split operation:\n-- Full node [1,2,3,4,5] splits:\n--   Median = 3 (moves up)\n--   Left: [1,2]\n--   Right: [4,5]\n-- Parent gets key 3"
+      },
+      {
+        "question": "DFS traversal from A: A-B, B-C, B-D, C-E. What is the visit order (alphabetical neighbor order)?",
+        "options": [
+          "A, B, C, E, D",
+          "A, B, D, C, E",
+          "A, B, C, D, E",
+          "A, C, E, B, D"
+        ],
+        "correct": 0,
+        "explanation": "DFS (recursive, alphabetical): A->B->C->E, backtrack to C (no more), backtrack to B->D. Order: A, B, C, E, D.",
+        "code": "PROCEDURE DFS(G, v, visited)\n  visited[v] ← TRUE\n  PRINT v\n  FOR each neighbor w of v (sorted) DO\n    IF NOT visited[w] THEN\n      DFS(G, w, visited)\n    END IF\n  END FOR\nEND PROCEDURE\n\n-- Graph: A-B, A-C, B-D, C-E\n-- Visited: A->B->C->E, back, B->D\n-- Order: A, B, C, E, D"
+      },
+      {
+        "question": "AVL tree: after inserting 10, 20, 30 in order, what rotation is needed?",
+        "options": [
+          "Left rotation at 10",
+          "Right rotation at 30",
+          "Left-right double rotation",
+          "No rotation needed"
+        ],
+        "correct": 0,
+        "explanation": "Insert 10 (root), 20 (right child), 30 (right-right imbalance). This is a single left rotation at root (10). New root: 20, left=10, right=30.",
+        "code": "-- AVL Insertions: 10, 20, 30\n-- After 10:     10 (balanced)\n-- After 20:    10\n--               \\\n--               20 (balanced)\n-- After 30:    10  <- imbalance at 10 (BF=-2)\n--               \\\n--               20\n--                \\\n--                30\n\n-- Left rotation at 10:\n--       20\n--      /  \\\n--    10   30 (balanced)"
+      },
+      {
+        "question": "What is the worst-case time complexity of hash table lookup with chaining?",
+        "options": [
+          "O(n) when all keys hash to same bucket",
+          "O(1) always",
+          "O(log n)",
+          "O(n^2)"
+        ],
+        "correct": 0,
+        "explanation": "With chaining, worst case occurs when all n keys hash to the same bucket, forming a chain of length n. Lookup becomes O(n). Average case with good hash function: O(1 + alpha) where alpha = n/m.",
+        "code": "-- Hash Table with Chaining:\n-- Average: O(1 + n/m) where m = table size\n-- Worst case: O(n) if all keys collide\n\nPROCEDURE HashSearch(table, key, m)\n  index ← key MOD m\n  node ← table[index]\n  WHILE node ≠ NULL DO\n    IF node.key = key THEN\n      RETURN node\n    END IF\n    node ← node.next\n  END WHILE\n  RETURN NULL\nEND PROCEDURE"
+      },
+      {
+        "question": "Pre-order traversal of tree A(B(D,E),C(F,)): output?",
+        "options": [
+          "A, B, D, E, C, F",
+          "A, B, C, D, E, F",
+          "D, E, B, F, C, A",
+          "D, B, E, A, F, C"
+        ],
+        "correct": 0,
+        "explanation": "Pre-order: root, left, right. Visit A, then B's subtree (D, E), then C's subtree (F). Result: A, B, D, E, C, F.",
+        "code": "PROCEDURE PreOrder(node)\n  IF node ≠ NULL THEN\n    PRINT node.value\n    PreOrder(node.left)\n    PreOrder(node.right)\n  END IF\nEND PROCEDURE\n\n-- Tree:     A\n--          / \\\n--         B   C\n--        / \\ /\n--       D  E F\n\n-- PreOrder: A, B, D, E, C, F"
+      },
+      {
+        "question": "Level-order traversal of BST (1(2(4,),3(,5)))?",
+        "options": [
+          "1, 2, 3, 4, 5",
+          "1, 2, 3, 5, 4",
+          "2, 4, 1, 3, 5",
+          "4, 2, 5, 3, 1"
+        ],
+        "correct": 0,
+        "explanation": "Level order uses BFS. Level 1: 1. Level 2: 2, 3. Level 3: 4, 5. Result: 1, 2, 3, 4, 5.",
+        "code": "PROCEDURE LevelOrder(root)\n  IF root = NULL THEN RETURN\n  queue ← EMPTY\n  ENQUEUE(queue, root)\n  WHILE queue is not empty DO\n    node ← DEQUEUE(queue)\n    PRINT node.value\n    IF node.left ≠ NULL THEN\n      ENQUEUE(queue, node.left)\n    END IF\n    IF node.right ≠ NULL THEN\n      ENQUEUE(queue, node.right)\n    END IF\n  END WHILE\nEND PROCEDURE"
+      },
+      {
+        "question": "Queue operations: enqueue(1), enqueue(2), enqueue(3), dequeue(), enqueue(4), dequeue(). Queue contents?",
+        "options": [
+          "[3, 4]",
+          "[2, 3, 4]",
+          "[4]",
+          "[1, 2]"
+        ],
+        "correct": 0,
+        "explanation": "FIFO: enqueue 1,2,3 => [1,2,3]. dequeue => 1, [2,3]. enqueue 4 => [2,3,4]. dequeue => 2, [3,4]. Queue: [3, 4].",
+        "code": "-- Queue (FIFO: First In First Out)\n-- enqueue(1): [1]\n-- enqueue(2): [1, 2]\n-- enqueue(3): [1, 2, 3]\n-- dequeue() : returns 1, [2, 3]\n-- enqueue(4): [2, 3, 4]\n-- dequeue() : returns 2, [3, 4]\n\n-- Queue contents: [3, 4]"
+      },
+      {
+        "question": "What is the number of edges in a connected undirected graph with 6 vertices (tree)?",
+        "options": [
+          "5",
+          "6",
+          "15",
+          "10"
+        ],
+        "correct": 0,
+        "explanation": "A tree with n vertices has exactly n-1 edges. With 6 vertices: 6-1 = 5 edges. A tree is the minimally connected graph.",
+        "code": "-- Tree properties:\n-- |V| vertices, |E| edges\n-- |E| = |V| - 1\n-- Connected and acyclic\n\n-- 6 vertices => 5 edges\n-- Complete graph K6: 6*5/2 = 15 edges"
+      }
+    ]
+  },
+  {
+    "topic": "System Design",
+    "questions": [
+      {
+        "question": "Which architecture pattern separates an application into three interconnected parts: presentation, business logic, and data?",
+        "options": [
+          "Three-tier architecture",
+          "Microservices",
+          "Peer-to-peer",
+          "Event-driven"
+        ],
+        "correct": 0,
+        "explanation": "Three-tier architecture separates: (1) Presentation tier (UI), (2) Application tier (business logic), (3) Data tier (database). This separation enables independent development, scaling, and maintenance of each tier.",
+        "code": null
+      },
+      {
+        "question": "What is the primary benefit of database sharding?",
+        "options": [
+          "Horizontal scaling of data storage across multiple machines",
+          "Faster single queries",
+          "Simplified schema design",
+          "Better data consistency"
+        ],
+        "correct": 0,
+        "explanation": "Sharding distributes data across multiple database instances (shards) based on a shard key. This allows horizontal scaling - adding more servers to handle more data and traffic. Trade-offs include cross-shard query complexity.",
+        "code": null
+      },
+      {
+        "question": "In the CAP theorem, which combination is impossible during a network partition?",
+        "options": [
+          "Strong consistency AND high availability simultaneously",
+          "Partition tolerance AND consistency",
+          "Partition tolerance AND availability",
+          "Scalability AND reliability"
+        ],
+        "correct": 0,
+        "explanation": "During a partition, the system must choose between consistency (returning errors or stale data) and availability (returning potentially stale data). CP systems choose consistency (e.g., HBase), AP systems choose availability (e.g., Cassandra).",
+        "code": null
+      },
+      {
+        "question": "What is the purpose of a circuit breaker in microservices?",
+        "options": [
+          "Prevent cascading failures by stopping calls to a failing service",
+          "Improve performance through connection pooling",
+          "Encrypt service-to-service communication",
+          "Balance load between service instances"
+        ],
+        "correct": 0,
+        "explanation": "A circuit breaker monitors calls to external services. After failure threshold, it opens (stops calls), allows a cool-down period, then half-opens to test. This prevents cascading failures across the system.",
+        "code": null
+      },
+      {
+        "question": "Which design pattern ensures only one instance of a class exists?",
+        "options": [
+          "Singleton",
+          "Factory",
+          "Observer",
+          "Strategy"
+        ],
+        "correct": 0,
+        "explanation": "The Singleton pattern restricts class instantiation to one object. It provides a global access point. Used for configuration managers, connection pools, and logging services where a single shared instance is needed.",
+        "code": null
+      },
+      {
+        "question": "What is the difference between SQL and NoSQL databases in terms of schema?",
+        "options": [
+          "SQL uses fixed schema; NoSQL uses flexible/dynamic schema",
+          "NoSQL is always faster",
+          "SQL cannot handle relationships",
+          "NoSQL cannot handle structured data"
+        ],
+        "correct": 0,
+        "explanation": "SQL databases have rigid, predefined schemas with tables and columns. NoSQL databases offer flexible schemas: document stores (JSON), key-value, wide-column, and graph databases. NoSQL trades some consistency for scalability and flexibility.",
+        "code": null
+      },
+      {
+        "question": "What is an API rate limiter's purpose?",
+        "options": [
+          "Control the number of API requests a client can make in a time window",
+          "Encrypt API responses",
+          "Cache frequently accessed data",
+          "Compress API payloads"
+        ],
+        "correct": 0,
+        "explanation": "Rate limiting protects APIs from abuse, ensures fair usage, and prevents DoS. Algorithms include: token bucket (burst allowance), sliding window (time-based), and fixed window counter.",
+        "code": null
+      },
+      {
+        "question": "What is the read replica pattern used for?",
+        "options": [
+          "Offloading read queries to replicated databases to reduce load on the primary",
+          "Creating database backups",
+          "Encrypting read operations",
+          "Caching query results"
+        ],
+        "correct": 0,
+        "explanation": "Read replicas are copies of the primary database that handle read queries. The primary handles all writes, which are asynchronously replicated. This scales read capacity but introduces eventual consistency for replicated data.",
+        "code": null
+      },
+      {
+        "question": "Which messaging pattern ensures each message is consumed by exactly one consumer?",
+        "options": [
+          "Competing consumers",
+          "Publish-subscribe",
+          "Point-to-point is same as competing consumers",
+          "Fan-out"
+        ],
+        "correct": 0,
+        "explanation": "Competing consumers (competing consumers pattern) with a shared queue: multiple consumers compete for messages, but each message is delivered to only one consumer. This scales processing capacity for ordered or independent message processing.",
+        "code": null
+      },
+      {
+        "question": "What is a primary concern when designing for 99.99% availability?",
+        "options": [
+          "Fault tolerance with redundant components and automatic failover",
+          "Maximum performance",
+          "Minimum cost",
+          "Simplicity of design"
+        ],
+        "correct": 0,
+        "explanation": "99.99% availability (4 nines) = about 52.6 minutes downtime per year. Requires: redundant components, automatic failover, health checks, multi-region deployment, and robust monitoring. Cost is secondary to reliability.",
+        "code": null
+      },
+      {
+        "question": "What is CQRS primarily useful for?",
+        "options": [
+          "Optimizing read and write workloads independently",
+          "Replacing database normalization",
+          "Improving encryption performance",
+          "Reducing network latency"
+        ],
+        "correct": 0,
+        "explanation": "CQRS (Command Query Responsibility Segregation) separates the data model into: write model (optimized for validation and consistency) and read model (denormalized, optimized for specific queries). This allows independent scaling.",
+        "code": null
+      },
+      {
+        "question": "What design pattern handles the scenario where a service temporarily cannot fulfill a request?",
+        "options": [
+          "Retry pattern with exponential backoff",
+          "Load balancing",
+          "Caching",
+          "Compression"
+        ],
+        "correct": 0,
+        "explanation": "The retry pattern re-attempts failed operations with increasing delays (exponential backoff). This handles transient failures (network glitches, temporary overload). Must include: max retries, timeout, idempotency check.",
+        "code": null
+      },
+      {
+        "question": "What is the purpose of health check endpoints in microservices?",
+        "options": [
+          "Allow monitoring systems to verify service is running and healthy",
+          "Authenticate API requests",
+          "Rate limit incoming traffic",
+          "Cache service responses"
+        ],
+        "correct": 0,
+        "explanation": "Health checks (typically /health endpoint) return service status including: application status, database connectivity, external service dependencies, and resource usage. Load balancers use these to route traffic away from unhealthy instances.",
+        "code": null
+      },
+      {
+        "question": "What is database connection pooling used for?",
+        "options": [
+          "Reusing existing database connections to avoid connection setup overhead",
+          "Creating new connections for each query",
+          "Encrypting database traffic",
+          "Compressing query results"
+        ],
+        "correct": 0,
+        "explanation": "Connection pooling maintains a set of ready-to-use database connections. Instead of creating/destroying connections per request (expensive), applications borrow from and return to the pool. Configurable: min/max size, timeout, validation.",
+        "code": null
+      },
+      {
+        "question": "Which strategy best handles sudden traffic spikes in a web application?",
+        "options": [
+          "Auto-scaling with load balancer and queue-based processing",
+          "Single large server",
+          "Manual capacity planning only",
+          "Ignoring excess traffic"
+        ],
+        "correct": 0,
+        "explanation": "Auto-scaling automatically adds/removes instances based on metrics (CPU, request rate). Combined with a load balancer for distribution and message queues to buffer excess requests. This handles traffic spikes gracefully.",
+        "code": null
+      },
+      {
+        "question": "What is a shared-nothing architecture?",
+        "options": [
+          "Nodes are independent with no shared memory or disk",
+          "All nodes share the same database",
+          "Nodes share only CPU resources",
+          "A centralized server handles all requests"
+        ],
+        "correct": 0,
+        "explanation": "In shared-nothing architecture, each node is independent with its own CPU, memory, and disk. Communication is only through network messages. This enables horizontal scaling and single points of failure are eliminated.",
+        "code": null
+      },
+      {
+        "question": "What is the purpose of the Saga pattern in distributed transactions?",
+        "options": [
+          "Managing long-running transactions across multiple services with compensating actions",
+          "Improving single-database query performance",
+          "Encrypting data across services",
+          "Caching distributed data"
+        ],
+        "correct": 0,
+        "explanation": "Saga breaks distributed transactions into local transactions with compensating actions for rollback. Two types: choreography (event-driven, decentralized) and orchestration (central coordinator). Essential when 2PC is impractical for microservices.",
+        "code": null
+      },
+      {
+        "question": "What is eventual consistency most appropriate for?",
+        "options": [
+          "Read-heavy workloads where slight data staleness is acceptable",
+          "Financial transactions requiring immediate consistency",
+          "Real-time stock trading",
+          "Password validation"
+        ],
+        "correct": 0,
+        "explanation": "Eventual consistency is suitable for: social media feeds, product catalogs, analytics, and caching. NOT suitable for: financial transactions, inventory management, or any scenario requiring immediate consistency across replicas.",
+        "code": null
+      },
+      {
+        "question": "What is the purpose of a service discovery mechanism?",
+        "options": [
+          "Dynamic registration and lookup of service instances in a microservices architecture",
+          "DNS resolution for internet domains",
+          "Database query optimization",
+          "Static IP address management"
+        ],
+        "correct": 0,
+        "explanation": "Service discovery (Consul, Eureka, etcd) allows services to register their instances dynamically and enables clients to find available instances without hardcoded addresses. Supports health checking and load balancing.",
+        "code": null
+      },
+      {
+        "question": "What is the key advantage of event sourcing over traditional CRUD?",
+        "options": [
+          "Complete audit trail and ability to reconstruct state from events",
+          "Faster write performance",
+          "Simpler database schema",
+          "Less storage required"
+        ],
+        "correct": 0,
+        "explanation": "Event sourcing stores all changes as immutable events rather than just current state. Benefits: complete audit trail, time travel (reconstruct state at any point), event replay, and natural fit with CQRS. Trade-off: more complex queries and storage."
+      }
+    ]
+  },
+  {
+    "topic": "UML/Modeling",
+    "questions": [
+      {
+        "question": "In a UML class diagram, what does a solid line with an open diamond at one end represent?",
+        "options": [
+          "Aggregation (has-a relationship where part can exist independently)",
+          "Composition (strong ownership)",
+          "Inheritance (is-a)",
+          "Association (uses)"
+        ],
+        "correct": 0,
+        "explanation": "Aggregation represents a 'has-a' relationship where the contained object can exist independently of the container. Example: Department has Teachers - a Teacher can exist without a Department.",
+        "code": null
+      },
+      {
+        "question": "In a UML sequence diagram, what does an activation box represent?",
+        "options": [
+          "The period during which an object is executing a method",
+          "A decision point",
+          "A loop construct",
+          "An error condition"
+        ],
+        "correct": 0,
+        "explanation": "Activation boxes (thin rectangles on lifelines) show when an object is active (executing or waiting for a return). Nested activations represent recursive or delegated calls.",
+        "code": null
+      },
+      {
+        "question": "What does a dashed arrow in a UML class diagram typically represent?",
+        "options": [
+          "Dependency (uses in some way, usually temporary)",
+          "Inheritance",
+          "Composition",
+          "Association"
+        ],
+        "correct": 0,
+        "explanation": "A dashed arrow represents a dependency relationship: Class A depends on Class B (A uses B in some way). Dependencies are often temporary, like method parameters or local variables.",
+        "code": null
+      },
+      {
+        "question": "In a UML state diagram, what is a guard condition?",
+        "options": [
+          "A boolean expression that must be true for a transition to fire",
+          "A security check",
+          "A performance threshold",
+          "A data validation rule"
+        ],
+        "correct": 0,
+        "explanation": "Guard conditions (in brackets on transitions) must evaluate to true for the transition to occur. Example: [balance >= amount] on a withdraw transition. If false, the transition does not fire.",
+        "code": null
+      },
+      {
+        "question": "What does multiplicity '1..*' (one to many) mean in a UML class diagram?",
+        "options": [
+          "At least one, possibly many instances",
+          "Exactly one instance",
+          "Zero or one instance",
+          "Zero or more instances"
+        ],
+        "correct": 0,
+        "explanation": "1..* means at least one (minimum 1), with no upper limit. Example: an Order must have at least one OrderItem. Compare with 0..* (zero or more, optional) and 1..1 (exactly one).",
+        "code": null
+      },
+      {
+        "question": "In a UML use case diagram, what is an 'include' relationship?",
+        "options": [
+          "A base use case always includes the behavior of another use case",
+          "Optional behavior that may occur",
+          "A specialized version of a use case",
+          "A constraint on a use case"
+        ],
+        "correct": 0,
+        "explanation": "<<include>> means the base use case always invokes the included use case. Example: 'Process Payment' <<include>> 'Validate Card'. The included use case is mandatory behavior.",
+        "code": null
+      },
+      {
+        "question": "What is the difference between an abstract class and an interface in UML?",
+        "options": [
+          "Abstract class can have implementation; interface only defines contract",
+          "They are identical",
+          "Interface can have implementation; abstract class cannot",
+          "Abstract classes cannot have subclasses"
+        ],
+        "correct": 0,
+        "explanation": "Abstract class (italic name in UML) can have concrete methods and state. Interface (stereotype <<interface>>) defines only method signatures without implementation. A class can implement multiple interfaces but extend one abstract class.",
+        "code": null
+      },
+      {
+        "question": "What does a solid line with a closed (filled) triangle arrowhead represent?",
+        "options": [
+          "Generalization/Inheritance (is-a relationship)",
+          "Implementation of an interface",
+          "Composition",
+          "Navigation"
+        ],
+        "correct": 0,
+        "explanation": "A solid line with a filled triangle represents generalization (inheritance). The subclass points TO the superclass. Example: Dog --> Animal means Dog inherits from Animal.",
+        "code": null
+      },
+      {
+        "question": "In a sequence diagram, what does 'alt' fragment represent?",
+        "options": [
+          "Alternative paths based on conditions",
+          "A loop",
+          "Parallel execution",
+          "Critical section"
+        ],
+        "correct": 0,
+        "explanation": "The 'alt' (alternative) combined fragment shows conditional logic with multiple guarded sections. Only one section executes based on which guard condition is true. Similar to if-else.",
+        "code": null
+      },
+      {
+        "question": "What is a 'composition' relationship in UML?",
+        "options": [
+          "Strong ownership where the part cannot exist without the whole",
+          "Optional association",
+          "Temporary dependency",
+          "Many-to-many relationship"
+        ],
+        "correct": 0,
+        "explanation": "Composition (filled diamond) means the part belongs to exactly one whole and is destroyed when the whole is destroyed. Example: House contains Rooms - rooms don't exist independently of the house.",
+        "code": null
+      },
+      {
+        "question": "In a UML component diagram, what does a provided interface (lollipop) represent?",
+        "options": [
+          "Services that a component offers to other components",
+          "Services that a component requires",
+          "Internal implementation details",
+          "Data flow between components"
+        ],
+        "correct": 0,
+        "explanation": "A lollipop (circle on a stick) represents a provided interface - services the component exposes. A socket (half-circle) represents a required interface - services the component needs from others.",
+        "code": null
+      },
+      {
+        "question": "What does the 'extend' relationship in use case diagrams mean?",
+        "options": [
+          "Optional/conditional behavior that extends the base use case",
+          "Always required behavior",
+          "A more specific version",
+          "An error handler"
+        ],
+        "correct": 0,
+        "explanation": "<<extend>> means the extending use case may optionally add behavior to the base use case under specific conditions. Example: 'Apply Discount' <<extend>> 'Checkout' when [loyalty member].",
+        "code": null
+      },
+      {
+        "question": "In UML, what is the difference between activity diagram and state diagram?",
+        "options": [
+          "Activity diagram shows workflow/process flow; state diagram shows lifecycle of a single object",
+          "They are the same",
+          "State diagram shows process flow; activity shows object lifecycle",
+          "Activity diagrams cannot have decisions"
+        ],
+        "correct": 0,
+        "explanation": "Activity diagrams model process/workflow (like flowcharts with parallelism). State diagrams model the lifecycle of a single object through its possible states and transitions.",
+        "code": null
+      },
+      {
+        "question": "What does a self-message in a sequence diagram represent?",
+        "options": [
+          "An object calling one of its own methods (recursive call)",
+          "An error condition",
+          "A timeout",
+          "A message to the user"
+        ],
+        "correct": 0,
+        "explanation": "A self-message (arrow from an object's lifeline back to itself) indicates a recursive or self-call. The activation box shows nested execution levels within the same object.",
+        "code": null
+      },
+      {
+        "question": "In a UML deployment diagram, what does a node represent?",
+        "options": [
+          "A physical or virtual computational resource (server, device)",
+          "A software component",
+          "A database table",
+          "A network protocol"
+        ],
+        "correct": 0,
+        "explanation": "Nodes in deployment diagrams represent physical (server, router) or virtual (VM, container) resources. Artifacts (executable files, configuration) are deployed on nodes, showing the system's physical architecture."
+      }
+    ]
+  },
+  {
+    "topic": "Test Design",
+    "questions": [
+      {
+        "question": "Using boundary value analysis for input range [10, 100], which values should be tested?",
+        "options": [
+          "9, 10, 11, 99, 100, 101",
+          "10, 50, 100",
+          "10, 11, 100, 101",
+          "9, 10, 100, 101"
+        ],
+        "correct": 0,
+        "explanation": "BVA tests at boundaries and just outside: minimum-1 (9), minimum (10), minimum+1 (11), maximum-1 (99), maximum (100), maximum+1 (101). Most errors occur at boundaries.",
+        "code": null
+      },
+      {
+        "question": "What is the cyclomatic complexity of a function with 3 if-statements and no loops?",
+        "options": [
+          "4",
+          "3",
+          "5",
+          "6"
+        ],
+        "correct": 0,
+        "explanation": "Cyclomatic complexity V(G) = E - N + 2 (edges - nodes + 2), or simply: number of decisions + 1. 3 if-statements = 3 decisions. V(G) = 3 + 1 = 4. This represents the minimum number of test cases needed.",
+        "code": "-- Cyclomatic complexity\n-- V(G) = P + 1 where P = predicate nodes\n\nPROCEDURE Example(x, y, z)\n  IF x > 0 THEN      -- Decision 1\n    IF y > 0 THEN    -- Decision 2\n      result ← 1\n    ELSE\n      result ← 2\n    END IF\n  ELSE\n    IF z > 0 THEN    -- Decision 3\n      result ← 3\n    ELSE\n      result ← 4\n    END IF\n  END IF\n  RETURN result\nEND PROCEDURE\n-- V(G) = 3 + 1 = 4"
+      },
+      {
+        "question": "Equivalence partitioning for age field (valid: 18-65). Invalid partitions?",
+        "options": [
+          "age < 18 AND age > 65",
+          "age = 0 only",
+          "age > 65 only",
+          "No invalid partitions"
+        ],
+        "correct": 0,
+        "explanation": "Two invalid equivalence classes: (1) age < 18 and (2) age > 65. One valid class: 18 <= age <= 65. Test one value from each class to cover all scenarios.",
+        "code": null
+      },
+      {
+        "question": "How many test cases does decision table testing produce for 3 binary conditions?",
+        "options": [
+          "8 (2^3)",
+          "3",
+          "6",
+          "4"
+        ],
+        "correct": 0,
+        "explanation": "Each condition has 2 values (true/false). With 3 conditions: 2^3 = 8 unique combinations. Each row in the decision table is one test case.",
+        "code": "-- Decision Table: 3 conditions (A, B, C)\n-- Rules: 2^3 = 8\n-- Y=Yes, N=No\n-- C1 C2 C3 | Action\n-- Y  Y  Y | A1\n-- Y  Y  N | A2\n-- Y  N  Y | A3\n-- Y  N  N | A4\n-- N  Y  Y | A5\n-- N  Y  N | A6\n-- N  N  Y | A7\n-- N  N  N | A8"
+      },
+      {
+        "question": "What is the purpose of state transition testing?",
+        "options": [
+          "Testing system behavior when transitioning between different states",
+          "Testing database queries",
+          "Testing network protocols only",
+          "Testing user interface layouts"
+        ],
+        "correct": 0,
+        "explanation": "State transition testing verifies that the system behaves correctly when moving between states. Tests cover: valid transitions, invalid transitions, and state-specific behaviors.",
+        "code": null
+      },
+      {
+        "question": "What is the minimum number of test cases for branch coverage (if-else, no loops)?",
+        "options": [
+          "2 (true and false branches)",
+          "1",
+          "3",
+          "Depends on the number of variables"
+        ],
+        "correct": 0,
+        "explanation": "Branch coverage requires each decision outcome (true/false) to be exercised at least once. For a single if-else: 2 test cases (one where condition is true, one where false) achieve 100% branch coverage.",
+        "code": null
+      },
+      {
+        "question": "Pairwise testing with 3 parameters (2, 3, 2 values each) requires minimum how many test cases?",
+        "options": [
+          "6 (max values * second largest)",
+          "12",
+          "8",
+          "7"
+        ],
+        "correct": 0,
+        "explanation": "Pairwise testing ensures every pair of parameter values is tested together. For parameters with 2, 3, 2 values: minimum pairs = max(2*3, 2*2, 3*2) = 6. Using orthogonal arrays or all-pairs algorithm.",
+        "code": null
+      },
+      {
+        "question": "What is the difference between statement coverage and branch coverage?",
+        "options": [
+          "Branch coverage requires both true and false outcomes; statement coverage requires each line to execute",
+          "They are identical",
+          "Statement coverage is stronger",
+          "Branch coverage is weaker"
+        ],
+        "correct": 0,
+        "explanation": "Statement coverage: every executable statement is executed at least once. Branch coverage: every decision (if/else, case) takes both true and false outcomes. 100% branch coverage implies 100% statement coverage, but not vice versa.",
+        "code": null
+      },
+      {
+        "question": "What does '100% path coverage' mean?",
+        "options": [
+          "Every possible execution path through the code has been tested",
+          "Every function has been called",
+          "Every variable has been used",
+          "Every loop has been tested once"
+        ],
+        "correct": 0,
+        "explanation": "Path coverage tests every distinct path from entry to exit. With loops, this is often infinite (must limit iterations). For a function with n decisions, there are up to 2^n paths. Path coverage is the strongest but usually impractical.",
+        "code": null
+      },
+      {
+        "question": "In error guessing, what would be an experienced tester likely to test?",
+        "options": [
+          "Empty inputs, null values, special characters, boundary conditions",
+          "Only happy path scenarios",
+          "Random values",
+          "Only database operations"
+        ],
+        "correct": 0,
+        "explanation": "Error guessing relies on tester experience to anticipate error-prone areas: null/empty inputs, negative numbers, very large values, special characters (SQL injection), boundary conditions, and common mistake patterns.",
+        "code": null
+      },
+      {
+        "question": "What is a test oracle?",
+        "options": [
+          "A mechanism to determine whether a test has passed or failed",
+          "A database of test cases",
+          "A testing framework",
+          "A code coverage tool"
+        ],
+        "correct": 0,
+        "explanation": "A test oracle is the source of expected results against which actual outputs are compared. Types: human oracle, specification-based oracle, consistency oracle (compare outputs), and executable specification.",
+        "code": null
+      },
+      {
+        "question": "For a switch statement with 5 cases and a default, minimum test cases for branch coverage?",
+        "options": [
+          "6",
+          "5",
+          "1",
+          "7"
+        ],
+        "correct": 0,
+        "explanation": "Each case (5) plus the default (1) is a separate branch. Need at least 6 test cases to exercise each branch. One test case per case value + one for default/unmatched.",
+        "code": null
+      },
+      {
+        "question": "What is the cyclomatic complexity of a function with a switch (5 cases) and 2 if-statements?",
+        "options": [
+          "8",
+          "7",
+          "6",
+          "5"
+        ],
+        "correct": 0,
+        "explanation": "V(G) = decisions + 1. Switch with 5 cases: 5 decision points (or 4 if counting case boundaries). 2 if-statements: 2 decisions. Total = 5+2+1 = 8 (if counting each case as a branch) or 7 (standard counting).",
+        "code": null
+      },
+      {
+        "question": "What is exploratory testing?",
+        "options": [
+          "Simultaneous learning, test design, and execution without predefined scripts",
+          "Automated testing",
+          "Performance testing",
+          "Security testing only"
+        ],
+        "correct": 0,
+        "explanation": "Exploratory testing combines test design, execution, and learning in parallel. The tester explores the software, designs tests based on discoveries, and adapts in real-time. It complements scripted testing.",
+        "code": null
+      },
+      {
+        "question": "In equivalence partitioning, a password field accepting 8-20 characters has how many classes?",
+        "options": [
+          "3 (below 8, 8-20, above 20)",
+          "2 (valid and invalid)",
+          "4",
+          "1"
+        ],
+        "correct": 0,
+        "explanation": "Three equivalence classes: (1) < 8 characters (invalid), (2) 8-20 characters (valid), (3) > 20 characters (invalid). Test one value from each class."
+      }
+    ]
+  },
+  {
+    "topic": "Network Design",
+    "questions": [
+      {
+        "question": "A company needs 200 hosts per subnet. What is the minimum subnet mask?",
+        "options": [
+          "255.255.255.0 (/24) giving 254 usable hosts",
+          "255.255.255.128 (/25) giving 126 hosts",
+          "255.255.0.0 (/16) giving 65534 hosts",
+          "255.255.255.192 (/26) giving 62 hosts"
+        ],
+        "correct": 0,
+        "explanation": "Need 200 hosts. /24 gives 256 addresses (254 usable). /25 gives 128 (126 usable) - not enough. /24 is the minimum. More precisely: need 2^h - 2 >= 200, h=8 gives 254 >= 200.",
+        "code": null
+      },
+      {
+        "question": "What is the purpose of a DMZ in network design?",
+        "options": [
+          "Isolate public-facing services from the internal network",
+          "Increase network bandwidth",
+          "Provide wireless access",
+          "Replace firewalls"
+        ],
+        "correct": 0,
+        "explanation": "A DMZ (Demilitarized Zone) is a network segment between external and internal networks. Public services (web, email, DNS) are placed here. Firewalls control traffic between DMZ, internal network, and internet.",
+        "code": null
+      },
+      {
+        "question": "For a /20 subnet, how many usable host addresses are available?",
+        "options": [
+          "4094",
+          "2046",
+          "8190",
+          "1022"
+        ],
+        "correct": 0,
+        "explanation": "/20 means 32-20=12 host bits. Total addresses = 2^12 = 4096. Usable = 4096 - 2 (network + broadcast) = 4094.",
+        "code": null
+      },
+      {
+        "question": "What is the main benefit of VLAN segmentation?",
+        "options": [
+          "Reduced broadcast domains and improved security",
+          "Increased bandwidth",
+          "Faster routing",
+          "Simpler configuration"
+        ],
+        "correct": 0,
+        "explanation": "VLANs create separate broadcast domains, reducing broadcast traffic. They also provide security by isolating traffic between VLANs, require routing (router or layer 3 switch) for inter-VLAN communication.",
+        "code": null
+      },
+      {
+        "question": "Where should a web application firewall (WAF) be placed?",
+        "options": [
+          "Between the internet and web servers, in the DMZ",
+          "Inside the internal network",
+          "At the endpoint only",
+          "In the database server"
+        ],
+        "correct": 0,
+        "explanation": "A WAF filters HTTP traffic targeting web applications. It's placed between the internet and web servers (typically in the DMZ). It inspects Layer 7 (application) traffic for SQL injection, XSS, and other attacks.",
+        "code": null
+      },
+      {
+        "question": "Subnet 192.168.10.0/23. What is the broadcast address?",
+        "options": [
+          "192.168.11.255",
+          "192.168.10.255",
+          "192.168.11.0",
+          "192.168.255.255"
+        ],
+        "correct": 0,
+        "explanation": "/23 means 7 host bits, block size = 128. Range: 192.168.10.0 - 192.168.11.255. Network: 192.168.10.0, Broadcast: 192.168.11.255, Usable: 192.168.10.1 - 192.168.11.254.",
+        "code": null
+      },
+      {
+        "question": "What is the maximum number of VLANs possible with standard 802.1Q tagging?",
+        "options": [
+          "4094 (12-bit VLAN ID, 0 and 4095 reserved)",
+          "1000",
+          "256",
+          "65535"
+        ],
+        "correct": 0,
+        "explanation": "802.1Q uses a 12-bit VLAN ID field: 2^12 = 4096. VLAN 0 is reserved (priority), VLAN 4095 is reserved. Usable: 4094 VLANs.",
+        "code": null
+      },
+      {
+        "question": "What is the purpose of a default gateway?",
+        "options": [
+          "Route traffic destined for other networks",
+          "Filter malicious traffic",
+          "Assign IP addresses",
+          "Resolve domain names"
+        ],
+        "correct": 0,
+        "explanation": "The default gateway is the router interface that forwards packets to destinations outside the local subnet. When a host determines the destination is not on its local network, it sends the packet to the default gateway.",
+        "code": null
+      },
+      {
+        "question": "Network 10.0.0.0/16 needs to be divided into 8 equal subnets. New subnet mask?",
+        "options": [
+          "255.255.224.0 (/19)",
+          "255.255.240.0 (/20)",
+          "255.255.254.0 (/23)",
+          "255.255.255.0 (/24)"
+        ],
+        "correct": 0,
+        "explanation": "Need 8 subnets: borrow 3 bits (2^3=8). Original /16 + 3 = /19. Mask: 255.255.224.0. Each subnet has 8190 usable hosts.",
+        "code": null
+      },
+      {
+        "question": "What is a /30 subnet typically used for?",
+        "options": [
+          "Point-to-point links between routers (2 usable hosts)",
+          "Large LAN segments",
+          "Server farms",
+          "Wireless networks"
+        ],
+        "correct": 0,
+        "explanation": "/30 provides 2 usable addresses (2^2 - 2 = 2), perfect for point-to-point links between two routers. Each router gets one address, no broadcast waste.",
+        "code": null
+      },
+      {
+        "question": "In a three-tier network architecture, what are the three layers?",
+        "options": [
+          "Core, Distribution, Access",
+          "Frontend, Backend, Database",
+          "Internet, DMZ, Internal",
+          "Physical, Data Link, Network"
+        ],
+        "correct": 0,
+        "explanation": "Cisco three-tier: (1) Core layer: high-speed backbone switching, (2) Distribution layer: routing, policies, security, (3) Access layer: connects end devices (switches, wireless APs, PoE).",
+        "code": null
+      },
+      {
+        "question": "NAT with PAT (overloading): internal network uses 192.168.1.0/24, public IP = 203.0.113.5. How many internal hosts can simultaneously access the internet?",
+        "options": [
+          "65535 (limited by port numbers)",
+          "254",
+          "1",
+          "1024"
+        ],
+        "correct": 0,
+        "explanation": "PAT (NAT overloading) uses unique source port numbers to distinguish connections. With one public IP: ~65535 ports available (minus reserved). Many more internal hosts than ports, but simultaneous connections are port-limited.",
+        "code": null
+      },
+      {
+        "question": "What is the purpose of spanning tree protocol (STP) in a switched network?",
+        "options": [
+          "Prevent Layer 2 loops by blocking redundant paths",
+          "Improve routing performance",
+          "Assign VLANs automatically",
+          "Encrypt inter-switch traffic"
+        ],
+        "correct": 0,
+        "explanation": "STP (IEEE 802.1D) prevents broadcast storms by blocking redundant switch paths. It elects a root bridge and calculates a loop-free logical topology. Redundant links serve as backup if the primary fails.",
+        "code": null
+      },
+      {
+        "question": "What is the network address for 172.16.5.130/25?",
+        "options": [
+          "172.16.5.128",
+          "172.16.5.0",
+          "172.16.5.127",
+          "172.16.5.129"
+        ],
+        "correct": 0,
+        "explanation": "/25 means 7 host bits, block size = 128. Subnets: 172.16.5.0/25 and 172.16.5.128/25. 130 falls in the second subnet. Network: 172.16.5.128, Broadcast: 172.16.5.255.",
+        "code": null
+      },
+      {
+        "question": "What is the purpose of an ACL (Access Control List) on a router?",
+        "options": [
+          "Filter traffic based on source/destination IP, port, and protocol",
+          "Accelerate routing decisions",
+          "Assign IP addresses automatically",
+          "Monitor bandwidth usage"
+        ],
+        "correct": 0,
+        "explanation": "ACLs define rules to permit or deny traffic based on criteria: source/destination IP, port numbers, protocol types (TCP/UDP/ICMP). Applied inbound or outbound on interfaces. Essential for network security."
+      }
+    ]
+  },
+  {
+    "topic": "Performance Analysis",
+    "questions": [
+      {
+        "question": "A system processes 100 requests/second. Average response time is 50ms. How many requests are in the system on average (Little's Law)?",
+        "options": [
+          "5",
+          "50",
+          "10",
+          "2"
+        ],
+        "correct": 0,
+        "explanation": "Little's Law: L = lambda * W = 100 * 0.05 = 5. On average, 5 requests are being processed in the system.",
+        "code": null
+      },
+      {
+        "question": "Database query takes 200ms, executes 50 times/second. What is the database utilization?",
+        "options": [
+          "1000% (10x, overloaded)",
+          "50%",
+          "100%",
+          "200%"
+        ],
+        "correct": 0,
+        "explanation": "Utilization = arrival_rate * service_time = 50 * 0.2 = 10 (1000%). The system is severely overloaded. For stability: arrival_rate * service_time < 1.",
+        "code": null
+      },
+      {
+        "question": "A web server handles 1000 req/s with 3 instances. Average latency is 20ms. If traffic doubles to 2000 req/s, how many instances are needed (linear scaling)?",
+        "options": [
+          "6 instances (doubling)",
+          "3 instances (enough)",
+          "9 instances",
+          "12 instances"
+        ],
+        "correct": 0,
+        "explanation": "Linear scaling: if 3 instances handle 1000 req/s, 6 instances handle 2000 req/s. Real systems may not scale linearly due to overhead, so 6-7 instances may be needed.",
+        "code": null
+      },
+      {
+        "question": "What is Amdahl's Law implication for a program that is 60% parallelizable on a 4-core system?",
+        "options": [
+          "Maximum speedup = 2.5x",
+          "Speedup = 4x",
+          "Speedup = 2.4x",
+          "Speedup = 1.6x"
+        ],
+        "correct": 0,
+        "explanation": "S(N) = 1/((1-0.6) + 0.6/4) = 1/(0.4 + 0.15) = 1/0.55 = 1.818x. Even with infinite cores: S = 1/0.4 = 2.5x maximum.",
+        "code": null
+      },
+      {
+        "question": "Response time breakdown: DNS=50ms, TCP=100ms, Server=200ms, Transfer=150ms. Total latency?",
+        "options": [
+          "500ms",
+          "200ms",
+          "300ms",
+          "450ms"
+        ],
+        "correct": 0,
+        "explanation": "Total latency = sum of all components: 50 + 100 + 200 + 150 = 500ms. Identifying the bottleneck (server at 200ms or total) guides optimization efforts.",
+        "code": null
+      },
+      {
+        "question": "A disk has average seek time 5ms, rotational latency 4ms, transfer rate 100MB/s. Time to read 1MB?",
+        "options": [
+          "~19ms (5+4+10)",
+          "9ms",
+          "100ms",
+          "15ms"
+        ],
+        "correct": 0,
+        "explanation": "Total = seek + rotation + transfer. Transfer time = 1MB / 100MB/s = 0.01s = 10ms. Total = 5 + 4 + 10 = 19ms.",
+        "code": null
+      },
+      {
+        "question": "System has 3 sequential stages with latencies 10ms, 20ms, 30ms. What is the end-to-end latency and throughput?",
+        "options": [
+          "Latency=60ms, Throughput=33.3/s (limited by bottleneck 30ms)",
+          "Latency=60ms, Throughput=100/s",
+          "Latency=30ms, Throughput=33.3/s",
+          "Latency=20ms, Throughput=50/s"
+        ],
+        "correct": 0,
+        "explanation": "Sequential: total latency = 10+20+30 = 60ms. Throughput = 1/max(stage latency) = 1/30ms = 33.3 requests/second. The bottleneck stage (30ms) determines throughput.",
+        "code": null
+      },
+      {
+        "question": "What is the throughput of a pipeline with 4 stages (10ms, 15ms, 10ms, 15ms) after warm-up?",
+        "options": [
+          "66.7 requests/second (1/15ms)",
+          "100 requests/second",
+          "25 requests/second",
+          "40 requests/second"
+        ],
+        "correct": 0,
+        "explanation": "Pipeline throughput = 1 / max(stage time) = 1/15ms = 66.7 req/s. The bottleneck stage (15ms) limits throughput. First request takes 50ms; subsequent ones every 15ms.",
+        "code": null
+      },
+      {
+        "question": "Cache hit ratio = 95%, cache access = 10ns, memory access = 100ns. Average access time?",
+        "options": [
+          "14.5 ns",
+          "50 ns",
+          "19 ns",
+          "10.5 ns"
+        ],
+        "correct": 0,
+        "explanation": "AAT = 0.95*10 + 0.05*100 = 9.5 + 5 = 14.5ns. The 5% miss penalty is partially amortized by the 95% hit rate.",
+        "code": null
+      },
+      {
+        "question": "Server can handle 500 concurrent connections. Each connection lasts 200ms on average. Maximum throughput (requests/second)?",
+        "options": [
+          "2500 requests/second",
+          "500 requests/second",
+          "200 requests/second",
+          "1000 requests/second"
+        ],
+        "correct": 0,
+        "explanation": "Throughput = concurrent_connections / avg_duration = 500 / 0.2 = 2500 requests/second. This is the maximum sustainable throughput.",
+        "code": null
+      },
+      {
+        "question": "Application has 90th percentile response time of 500ms. What does this mean?",
+        "options": [
+          "90% of requests complete within 500ms",
+          "Each request takes at least 500ms",
+          "90% of requests take exactly 500ms",
+          "The average response time is 500ms"
+        ],
+        "correct": 0,
+        "explanation": "P90 = 500ms means 90% of all requests complete in 500ms or less. 10% take longer than 500ms. P99 and P999 are also critical for understanding tail latency.",
+        "code": null
+      },
+      {
+        "question": "What is the bottleneck in a system with CPU utilization 30%, memory 50%, disk I/O 95%?",
+        "options": [
+          "Disk I/O",
+          "CPU",
+          "Memory",
+          "Network"
+        ],
+        "correct": 0,
+        "explanation": "Disk I/O at 95% utilization is the bottleneck. It limits overall system throughput. Optimization should focus on disk: caching, indexing, faster storage, or reducing I/O operations.",
+        "code": null
+      },
+      {
+        "question": "A load balancer distributes traffic to 4 servers equally. Each handles 200 req/s max. System capacity?",
+        "options": [
+          "800 requests/second",
+          "200 requests/second",
+          "600 requests/second",
+          "1000 requests/second"
+        ],
+        "correct": 0,
+        "explanation": "With equal distribution and no overhead: 4 * 200 = 800 req/s total. In practice, slightly less due to load balancer overhead and potential imbalance.",
+        "code": null
+      },
+      {
+        "question": "What metric best indicates whether a system needs more CPU resources?",
+        "options": [
+          "CPU utilization consistently above 80%",
+          "Memory usage at 50%",
+          "Disk space at 70%",
+          "Network throughput at 60%"
+        ],
+        "correct": 0,
+        "explanation": "Sustained high CPU utilization (>80%) indicates the CPU is a bottleneck. Low CPU with high latency suggests other bottlenecks (I/O, network, locking). Context switching rate and run queue length are also important CPU metrics.",
+        "code": null
+      },
+      {
+        "question": "What is the effect of adding a caching layer with 80% hit rate and 1ms cache latency (original system: 50ms)?",
+        "options": [
+          "Average latency drops from 50ms to 10.8ms",
+          "Average latency drops to 1ms",
+          "Average latency drops to 40ms",
+          "No improvement"
+        ],
+        "correct": 0,
+        "explanation": "New AAT = 0.8*1 + 0.2*50 = 0.8 + 10 = 10.8ms. Significant improvement from 50ms to 10.8ms. Cache effectiveness depends on hit rate and access pattern."
+      }
+    ]
+  },
+  {
+    "topic": "Scenario Problems",
+    "questions": [
+      {
+        "question": "A company needs to design an e-commerce system handling 10,000 concurrent users with 99.9% uptime. Which architecture is most appropriate?",
+        "options": [
+          "Microservices with auto-scaling, load balancing, and multi-AZ deployment",
+          "Single monolithic application on a large server",
+          "Static website with CDN only",
+          "Peer-to-peer network"
+        ],
+        "correct": 0,
+        "explanation": "10K concurrent users + 99.9% uptime requires: auto-scaling (handle traffic spikes), load balancer (distribute traffic), microservices (independent scaling), multi-AZ (fault tolerance). 99.9% = ~8.76 hours downtime/year.",
+        "code": null
+      },
+      {
+        "question": "A database serves 1000 queries/second. Average query: 5ms. Adding a read replica: what is the approximate capacity improvement?",
+        "options": [
+          "Nearly doubles read capacity",
+          "Doubles total capacity including writes",
+          "No improvement",
+          "10x improvement"
+        ],
+        "correct": 0,
+        "explanation": "Read replicas handle SELECT queries, offloading from the primary. With 1 primary + 1 replica: read capacity nearly doubles. Writes still go only to primary. Actual improvement depends on read/write ratio.",
+        "code": null
+      },
+      {
+        "question": "System latency increases under load. CPU=40%, Memory=60%, DB=85%. What should be optimized first?",
+        "options": [
+          "Database (highest utilization, likely bottleneck)",
+          "CPU (add more cores)",
+          "Memory (add RAM)",
+          "Network (upgrade bandwidth)"
+        ],
+        "correct": 0,
+        "explanation": "The database at 85% utilization is the bottleneck. Options: add read replicas, optimize slow queries (add indexes, rewrite queries), implement caching, or use connection pooling. CPU and memory have headroom.",
+        "code": null
+      },
+      {
+        "question": "Design a notification system that must deliver messages to 1 million users within 1 minute. Best approach?",
+        "options": [
+          "Message queue (Kafka/RabbitMQ) with consumer workers pushing via WebSocket/SSE",
+          "Direct database polling",
+          "Email only",
+          "Single-threaded processing"
+        ],
+        "correct": 0,
+        "explanation": "A message queue handles the 1M message burst. Consumer workers pull from the queue and push via WebSocket or SSE for real-time delivery. Queue ensures no messages are lost. Workers can scale horizontally.",
+        "code": null
+      },
+      {
+        "question": "A system's cache has 70% hit rate. Response time with cache: 2ms, without cache: 20ms. What is the average response time?",
+        "options": [
+          "7.4 ms",
+          "20 ms",
+          "2 ms",
+          "14 ms"
+        ],
+        "correct": 0,
+        "explanation": "Average = 0.70*2 + 0.30*20 = 1.4 + 6.0 = 7.4ms. Improving hit rate from 70% to 80% would reduce to: 0.8*2 + 0.2*20 = 5.6ms.",
+        "code": null
+      },
+      {
+        "question": "An API endpoint experiences 5x traffic spikes during sales. Current capacity: 100 req/s, normal: 20 req/s. How to handle?",
+        "options": [
+          "Auto-scaling with minimum 3 instances, burst to 15",
+          "Single larger server",
+          "Reject excess requests",
+          "Manually add servers during sales"
+        ],
+        "correct": 0,
+        "explanation": "100 req/s needed during spikes, 20 req/s normal. Auto-scaling: minimum instances for 20 req/s, scale up when traffic increases. Queue-based architecture can smooth bursts.",
+        "code": null
+      },
+      {
+        "question": "After deploying a new feature, error rate increases from 0.1% to 2%. P99 latency from 200ms to 2000ms. Immediate action?",
+        "options": [
+          "Rollback the deployment, analyze logs, fix in staging",
+          "Wait and monitor",
+          "Add more servers",
+          "Ignore it"
+        ],
+        "correct": 0,
+        "explanation": "A rollback immediately restores service quality. Post-rollback: analyze logs/metrics to identify the root cause, reproduce in staging, implement fix, test thoroughly, then redeploy.",
+        "code": null
+      },
+      {
+        "question": "A distributed system needs to maintain consistency across 3 database replicas. 2PC vs Saga: which is more appropriate if latency must be <100ms?",
+        "options": [
+          "2PC for strong consistency within latency budget",
+          "Saga for lower latency",
+          "Neither works",
+          "1PC (not a real protocol)"
+        ],
+        "correct": 0,
+        "explanation": "2PC provides strong consistency with a two-phase commit. If the network between replicas has low latency (<20ms per phase), 2PC completes within 100ms. Saga adds latency due to sequential execution of compensating actions.",
+        "code": null
+      },
+      {
+        "question": "Design a URL shortener that must generate 1000 short URLs per second. What is the key design challenge?",
+        "options": [
+          "Ensuring global uniqueness and fast lookup of short codes",
+          "Data storage capacity",
+          "Security of URLs",
+          "User authentication"
+        ],
+        "correct": 0,
+        "explanation": "Key challenges: (1) Unique ID generation (counter with sharding, base62 encoding, or snowflake IDs), (2) Fast lookup (distributed cache like Redis for hot URLs, database for persistence), (3) Scalability (consistent hashing for distribution).",
+        "code": null
+      },
+      {
+        "question": "A real-time chat system needs to support 100K concurrent connections per server. What is the primary technology choice?",
+        "options": [
+          "WebSocket with async/event-driven architecture",
+          "HTTP polling",
+          "REST API",
+          "FTP"
+        ],
+        "correct": 0,
+        "explanation": "WebSocket provides persistent, bidirectional connections ideal for chat. Combined with async/event-driven server (Node.js, Netty) to handle 100K+ concurrent connections per server. Each connection uses minimal memory (~10KB)."
+      }
+    ]
+  }
+]
