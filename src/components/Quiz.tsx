@@ -15,6 +15,23 @@ interface QuizQuestion {
 
 type Mode = 'drill' | 'exam' | 'review';
 
+const categoryNames: Record<string, string> = {
+  'Hardware/Architecture': 'ハードウェア/アーキテクチャ',
+  'OS/Software': 'OS/ソフトウェア',
+  'Network': 'ネットワーク',
+  'Database': 'データベース',
+  'Security': 'セキュリティ',
+  'System Architecture': 'システムアーキテクチャ',
+  'Project Management': 'プロジェクトマネジメント',
+  'Strategy/Legal': 'ストラテジ/法務',
+};
+
+const modeNames: Record<string, string> = {
+  drill: 'ドリル',
+  exam: '模擬試験',
+  review: '復習',
+};
+
 const CATEGORIES = [
   'Hardware/Architecture',
   'OS/Software',
@@ -149,7 +166,7 @@ export default function Quiz() {
                 : 'bg-[#1a1a3e] text-gray-300 hover:bg-[#252550]'
             }`}
           >
-            {m.charAt(0).toUpperCase() + m.slice(1)}
+            {modeNames[m] || m}
             {m === 'review' && wrongIds.length > 0 && ` (${wrongIds.length})`}
           </button>
         ))}
@@ -160,7 +177,7 @@ export default function Quiz() {
             onChange={e => setShuffle(e.target.checked)}
             className="accent-[#f7c948]"
           />
-          Shuffle
+          シャッフル
         </label>
       </div>
 
@@ -176,7 +193,7 @@ export default function Quiz() {
                   : 'bg-[#1a1a3e] text-gray-500'
               }`}
             >
-              {cat}
+              {categoryNames[cat] || cat}
             </button>
           ))}
         </div>
@@ -184,29 +201,29 @@ export default function Quiz() {
 
       {isFinished ? (
         <div className="bg-[#1a1a3e] rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-bold text-[#f7c948] mb-4">Quiz Complete!</h2>
+          <h2 className="text-2xl font-bold text-[#f7c948] mb-4">問題集完了!</h2>
           <p className="text-xl mb-2">
-            Score: <span className="text-[#ff6b35] font-bold">{score}</span> / {answered}
+            得点: <span className="text-[#ff6b35] font-bold">{score}</span> / {answered}
           </p>
           <p className="text-gray-400 mb-6">
-            {answered > 0 ? `${Math.round((score / answered) * 100)}% accuracy` : ''}
+            {answered > 0 ? `正解率 ${Math.round((score / answered) * 100)}%` : ''}
           </p>
           <button
             onClick={restart}
             className="px-6 py-3 bg-gradient-to-r from-[#ff6b35] to-[#f7c948] text-black rounded-lg font-bold hover:opacity-90"
           >
-            Try Again
+            もう一度挑戦
           </button>
         </div>
       ) : currentQ ? (
         <div className="bg-[#1a1a3e] rounded-xl p-6">
           <div className="flex justify-between items-center mb-4">
             <span className="text-xs px-3 py-1 rounded-full bg-[#252550] text-[#f7c948]">
-              {currentQ.category}
+              {categoryNames[currentQ.category] || currentQ.category}
             </span>
             <span className="text-sm text-gray-400">
               {currentIndex + 1} / {displayQuestions.length}
-              {mode === 'drill' && ` | Score: ${score}/${answered}`}
+              {mode === 'drill' && ` | 得点: ${score}/${answered}`}
             </span>
           </div>
 

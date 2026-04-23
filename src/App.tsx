@@ -7,10 +7,10 @@ import Progress from './components/Progress'
 type Tab = 'quiz' | 'calc' | 'subjectb' | 'progress'
 
 const tabs: { id: Tab; label: string; icon: string }[] = [
-  { id: 'quiz', label: 'Quiz', icon: 'Q' },
-  { id: 'calc', label: 'Calc', icon: 'C' },
-  { id: 'subjectb', label: 'Subject B', icon: 'B' },
-  { id: 'progress', label: 'Stats', icon: 'S' },
+  { id: 'quiz', label: '問題集', icon: 'Q' },
+  { id: 'calc', label: '計算トレーニング', icon: 'C' },
+  { id: 'subjectb', label: '科目B', icon: 'B' },
+  { id: 'progress', label: '統計', icon: 'S' },
 ]
 
 export default function App() {
@@ -54,7 +54,7 @@ export default function App() {
       </main>
 
       <footer className="text-center py-6 text-xs text-gray-600">
-        AP Exam Study - All content in English
+        AP Exam Study
       </footer>
     </div>
   )
