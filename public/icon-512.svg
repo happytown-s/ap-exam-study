@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0f172a"/>
+  <rect x="24" y="24" width="464" height="464" rx="80" fill="#1e293b" opacity="0.5"/>
+  <text x="256" y="310" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="180" font-weight="900" fill="#6366f1" letter-spacing="-4">AP</text>
+  <rect x="196" y="340" width="120" height="6" rx="3" fill="#6366f1" opacity="0.6"/>
+</svg>
